@@ -1,4 +1,4 @@
-## Singly linked list in Python (under updating)
+## Singly linked list in Python
 
 Python already has a data structure called `list`, which is more like `array` as occupying a contiguous memory and dereferenced by index. However, we can still implement the pure singly linked list using object binding in Python.
 
