@@ -54,7 +54,10 @@ class _Node(Slist):
 
     def __eq__(self, obj):
         return isinstance(obj, _Node) \
-            and self.head() == obj.head() and self.tail() == obj.tail()
+            and self.val == obj.val and self.next == obj.next
+            # Note that the second `==` above calls __eq__() tail-recursively, and can
+            # be implemented using `jump` instead of `call/ret`, depending on the Python
+            # optimizer.
 
 class _Iter:
     def __init__(self, p: Slist):
@@ -94,9 +97,9 @@ def slist(vals: Iterable =None, reverse: bool =False) -> Slist:
 
 
 # Example 1
-xs = slist([1, 2, 'a'])
+sl = slist([1, 2, 'a'])
 print("Forward order:", end='')
-for x in xs:
+for x in sl:
     print(f" {x}", end='')
 print()
 
@@ -104,21 +107,21 @@ print()
 assert cons(1, cons(2, cons(3, slist()))) == slist([1, 2, 3])
 
 # Example 3
-xs = slist("abc")
-print(f"car: {xs.head()}")                  # 'a'
-print(f"cadr: {xs.tail().head()}")          # 'b'
-print(f"caddr: {xs.tail().tail().head()}")  # 'c'
+sl = slist("abc")
+assert sl.head() == 'a'
+assert sl.tail().head() == 'b'
+assert sl.tail().tail().head() == 'c'
 try:
-    print(f"cadddr: {xs.tail().tail().tail().head()}")
-except IndexError as e:
-    print(e)
+    sl.tail().tail().tail().head()
+    assert False, "Exception should be raised"
+except IndexError:
+    pass
 
 # Example 4
-xs = slist([1, 2, 'a'], reverse=True)
-l = list(xs)  # Convert it to an array
-print(f"Reverse order: {l}")
+sl = slist([1, 2, 'a'], reverse=True)
+l = list(sl)  # Convert it to an array
+assert l == ['a', 2, 1]
 
 # Example 5
-xs = cons(1, cons(2, cons('a', slist())))
-l = list(xs)
-print(f"{l}")
+sl = cons(1, cons(2, cons('a', slist())))
+assert list(sl) == [1, 2, 'a']
