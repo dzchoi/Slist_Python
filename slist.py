@@ -1,8 +1,8 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Iterable, Iterator
 
 
-class Slist:
+class Slist(ABC):
     @abstractmethod
     def empty(self) -> bool:
         pass
