@@ -18,6 +18,10 @@ class Slist:
     def __iter__(self):
         return _Iter(self)
 
+    @abstractmethod
+    def __eq__(self, obj):
+        pass
+
 class _Nil(Slist):
     def empty(self) -> bool:
         return True
@@ -27,6 +31,9 @@ class _Nil(Slist):
 
     def tail(self):
         raise IndexError("tail from empty list")
+
+    def __eq__(self, obj):
+        return isinstance(obj, _Nil)
 
 # Global _Nil object
 _nil = _Nil()
@@ -44,6 +51,10 @@ class _Node(Slist):
 
     def tail(self):
         return self.next
+
+    def __eq__(self, obj):
+        return isinstance(obj, _Node) \
+            and self.head() == obj.head() and self.tail() == obj.tail()
 
 class _Iter:
     def __init__(self, p: Slist):
@@ -90,6 +101,9 @@ for x in xs:
 print()
 
 # Example 2
+assert cons(1, cons(2, cons(3, slist()))) == slist([1, 2, 3])
+
+# Example 3
 xs = slist("abc")
 print(f"car: {xs.head()}")                  # 'a'
 print(f"cadr: {xs.tail().head()}")          # 'b'
@@ -99,12 +113,12 @@ try:
 except IndexError as e:
     print(e)
 
-# Example 2
+# Example 4
 xs = slist([1, 2, 'a'], reverse=True)
 l = list(xs)  # Convert it to an array
 print(f"Reverse order: {l}")
 
-# Example 3
+# Example 5
 xs = cons(1, cons(2, cons('a', slist())))
 l = list(xs)
 print(f"{l}")
